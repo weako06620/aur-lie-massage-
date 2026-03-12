@@ -5,260 +5,237 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Galerie — Aurélie Massage</title>
   <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    .gallery-hero {
+      padding: 5rem 4rem 3rem;
+      background: var(--warm-white);
+      text-align: center;
+    }
+    .gallery-hero .section-tag {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+      font-family: var(--font-body);
+      font-size: .7rem;
+      letter-spacing: .15em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .gallery-hero .section-tag::before,
+    .gallery-hero .section-tag::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .gallery-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      color: var(--dark);
+      margin: 0;
+    }
+    .gallery-hero h1 em { font-style: italic; color: var(--forest); }
+
     .gallery-section {
-      padding: 3rem 4rem 6rem;
+      padding: 2rem 3rem 6rem;
       background: var(--warm-white);
     }
-
     .gallery-masonry {
       columns: 3;
-      column-gap: 8px;
+      column-gap: 10px;
     }
-
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       .gallery-masonry { columns: 2; }
-      .gallery-section { padding: 2rem 1rem 4rem; }
+      .gallery-section { padding: 1.5rem 1.5rem 4rem; }
+      .gallery-hero { padding: 4rem 1.5rem 2rem; }
     }
-
     @media (max-width: 480px) {
       .gallery-masonry { columns: 1; }
+      .gallery-section { padding: 1rem 1rem 3rem; }
     }
 
-    .gallery-item-m {
+    .gallery-item {
       break-inside: avoid;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       overflow: hidden;
-      position: relative;
+      border-radius: 4px;
       cursor: zoom-in;
+      position: relative;
     }
-
-    .gallery-item-m img, .gallery-item-m .g-bg {
+    .gallery-item img {
       width: 100%;
       display: block;
       transition: transform 0.5s ease;
     }
-
-    .gallery-item-m .g-bg {
-      height: 300px;
-      background-size: cover;
-      background-position: center;
-    }
-
-    .gallery-item-m:nth-child(3n) .g-bg { height: 380px; }
-    .gallery-item-m:nth-child(3n+1) .g-bg { height: 260px; }
-    .gallery-item-m:nth-child(3n+2) .g-bg { height: 320px; }
-
-    .gallery-item-m:hover .g-bg { transform: scale(1.04); }
-
-    .gallery-item-m .g-overlay {
+    .gallery-item:hover img { transform: scale(1.04); }
+    .gallery-item::after {
+      content: '';
       position: absolute;
       inset: 0;
       background: rgba(44,74,62,0);
-      transition: background 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      transition: background 0.3s ease;
     }
+    .gallery-item:hover::after { background: rgba(44,74,62,0.12); }
 
-    .gallery-item-m:hover .g-overlay {
-      background: rgba(44,74,62,0.25);
-    }
-
-    .g-overlay svg {
-      opacity: 0;
-      transform: scale(0.8);
-      transition: all 0.3s;
-      color: white;
-    }
-
-    .gallery-item-m:hover .g-overlay svg {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* Lightbox */
     .lightbox {
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 999;
-      background: rgba(10,20,15,0.95);
+      background: rgba(10,18,14,0.92);
+      z-index: 1000;
       align-items: center;
       justify-content: center;
     }
-
-    .lightbox.open { display: flex; }
-
-    .lightbox-inner {
-      position: relative;
+    .lightbox.active { display: flex; }
+    .lightbox img {
       max-width: 90vw;
       max-height: 90vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
-
-    .lightbox-inner .g-bg {
-      width: 80vw;
-      max-width: 900px;
-      height: 80vh;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-
     .lightbox-close {
-      position: absolute;
-      top: -2.5rem; right: 0;
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
       background: none;
       border: none;
       color: white;
-      font-size: 1.5rem;
+      font-size: 2rem;
       cursor: pointer;
-      opacity: 0.7;
+      opacity: 0.8;
       transition: opacity 0.2s;
     }
-
     .lightbox-close:hover { opacity: 1; }
+    .lightbox-prev, .lightbox-next {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      padding: .5rem 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .lightbox-prev:hover, .lightbox-next:hover { background: rgba(255,255,255,0.2); }
+    .lightbox-prev { left: 1rem; }
+    .lightbox-next { right: 1rem; }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav id="navbar">
-    <a href="index.html" class="nav-logo">Aurélie <span>Massage</span></a>
-    <div class="nav-links">
-      <a href="index.html">Accueil</a>
-      <a href="aboutme.html">Soins</a>
-      <a href="tarrif.html">Tarifs</a>
-      <a href="galeri.html" class="active">Galerie</a>
-    </div>
-    <div class="nav-socials">
-      <a href="https://www.facebook.com/people/Aur%C3%A9-Lie/pfbid02RkB1vqd2vrL55XC4V5RMW2MaSUFVGfbzSLNtK18XadEy2tCaWXRJD3E9CqpzTJnul/" target="_blank">
-        <svg width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,191.63V152h24a8,8,0,0,0,0-16H136V112a16,16,0,0,1,16-16h16a8,8,0,0,0,0-16H152a32,32,0,0,0-32,32v24H96a8,8,0,0,0,0,16h24v63.63a88,88,0,1,1,16,0Z"/></svg>
-      </a>
-      <a href="https://wa.me/33698895931" target="_blank">
-        <svg width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M187.58,144.84l-32-16a8,8,0,0,0-8,.5l-14.69,9.8a40.55,40.55,0,0,1-16-16l9.8-14.69a8,8,0,0,0,.5-8l-16-32A8,8,0,0,0,104,64a40,40,0,0,0-40,40,88.1,88.1,0,0,0,88,88,40,40,0,0,0,40-40A8,8,0,0,0,187.58,144.84ZM152,176a72.08,72.08,0,0,1-72-72A24,24,0,0,1,99.29,80.46l11.48,23L101,118a8,8,0,0,0-.73,7.51,56.47,56.47,0,0,0,30.15,30.15A8,8,0,0,0,138,155l14.61-9.74,23,11.48A24,24,0,0,1,152,176ZM128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></svg>
-      </a>
+  <nav class="nav" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Aurélie <span>Massage</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="aboutme.html">Soins</a></li>
+        <li><a href="tarrif.html">Tarifs</a></li>
+        <li><a href="galeri.html" class="active">Galerie</a></li>
+      </ul>
+      <div class="nav-contact">
+        <a href="tel:0698895931" aria-label="Téléphone">📞</a>
+        <a href="https://wa.me/33698895931" aria-label="WhatsApp">💬</a>
+        <a href="https://www.facebook.com/people/Aur%C3%A9-Lie/pfbid02RkB1vqd2vrL55XC4V5RMW2MaSUFVGfbzSLNtK18XadEy2tCaWXRJD3E9CqpzTJnul/" aria-label="Facebook">📘</a>
+      </div>
     </div>
   </nav>
 
-  <!-- PAGE HERO -->
-  <div class="page-hero">
-    <div>
-      <div class="section-tag" style="color:var(--sage-light);margin-bottom:1.5rem">
-        <span style="display:block;width:1.5rem;height:1px;background:var(--sage-light)"></span>
-        Atmosphère & espace
-      </div>
-      <h1 class="page-hero-title">Notre <em>galerie</em></h1>
-      <p class="page-hero-sub">Découvrez l'espace dédié à votre bien-être.</p>
+  <section class="gallery-hero">
+    <div class="section-tag">Moments de bien-être</div>
+    <h1>La galerie <em>d'Aurélie</em></h1>
+  </section>
+
+  <section class="gallery-section">
+    <div class="gallery-masonry" id="galleryGrid">
+      <div class="gallery-item" data-index="0"><img src="image/galerie_1.jpg" alt="Massage en plein air" loading="lazy" /></div>
+      <div class="gallery-item" data-index="1"><img src="image/galerie_2.jpg" alt="Massage relaxant" loading="lazy" /></div>
+      <div class="gallery-item" data-index="2"><img src="image/galerie_3.jpg" alt="Massage des pieds" loading="lazy" /></div>
+      <div class="gallery-item" data-index="3"><img src="image/galerie_4.jpg" alt="Soins naturels" loading="lazy" /></div>
+      <div class="gallery-item" data-index="4"><img src="image/galerie_5.jpg" alt="Séance en nature" loading="lazy" /></div>
+      <div class="gallery-item" data-index="5"><img src="image/galerie_6.jpg" alt="Table de massage nature" loading="lazy" /></div>
+      <div class="gallery-item" data-index="6"><img src="image/galerie_7.jpg" alt="Espace de soin" loading="lazy" /></div>
+      <div class="gallery-item" data-index="7"><img src="image/galerie_8.jpg" alt="Soin en forêt" loading="lazy" /></div>
     </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lbClose">✕</button>
+    <button class="lightbox-prev" id="lbPrev">‹</button>
+    <img src="" alt="" id="lbImg" />
+    <button class="lightbox-next" id="lbNext">›</button>
   </div>
 
-  <!-- GALLERY -->
-  <div class="gallery-section">
-    <div class="gallery-masonry" id="gallery">
-
-      <div class="gallery-item-m reveal" onclick="openLightbox('image/aurélie1.jpg')">
-        <div class="g-bg" style="background-image:url('image/aurélie1.jpg'), url('https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=600&q=80')"></div>
-        <div class="g-overlay">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
-        </div>
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">Aurélie <span>Massage</span></div>
+        <p class="footer-tagline">Le bien-être au naturel</p>
       </div>
-
-      <div class="gallery-item-m reveal" onclick="openLightbox('image/Aurélie_inbound8140722042501415014.jpg')">
-        <div class="g-bg" style="background-image:url('image/Aurélie_inbound8140722042501415014.jpg'), url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600&q=80')"></div>
-        <div class="g-overlay">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
-        </div>
+      <div class="footer-links">
+        <a href="index.html">Accueil</a>
+        <a href="aboutme.html">Soins</a>
+        <a href="tarrif.html">Tarifs</a>
+        <a href="galeri.html">Galerie</a>
       </div>
-
-      <div class="gallery-item-m reveal" onclick="openLightbox('image/zonedemassage.jpeg')">
-        <div class="g-bg" style="background-image:url('image/zonedemassage.jpeg'), url('https://images.unsplash.com/photo-1583416750470-965b2707b355?w=600&q=80')"></div>
-        <div class="g-overlay">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
-        </div>
-      </div>
-
-      <div class="gallery-item-m reveal" onclick="openLightbox('image/paysage.jpg')">
-        <div class="g-bg" style="background-image:url('image/paysage.jpg'), url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=600&q=80')"></div>
-        <div class="g-overlay">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
-        </div>
-      </div>
-
-      <div class="gallery-item-m reveal" onclick="openLightbox('image/aurélie1.jpg')">
-        <div class="g-bg" style="background-image:url('image/aurélie1.jpg'), url('https://images.unsplash.com/photo-1552693673-1bf958298935?w=600&q=80')"></div>
-        <div class="g-overlay">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
-        </div>
-      </div>
-
-      <div class="gallery-item-m reveal" onclick="openLightbox('image/zonedemassage.jpeg')">
-        <div class="g-bg" style="background-image:url('image/zonedemassage.jpeg'), url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80')"></div>
-        <div class="g-overlay">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <div class="lightbox-inner" onclick="event.stopPropagation()">
-      <button class="lightbox-close" onclick="closeLightbox()">✕ Fermer</button>
-      <div class="g-bg" id="lightbox-img"></div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-grid">
-      <div>
-        <div class="footer-brand-name">Aurélie <span>Massage</span></div>
-        <p class="footer-brand-desc">Des soins personnalisés pour votre bien-être au naturel.</p>
-      </div>
-      <div>
-        <div class="footer-col-title">Navigation</div>
-        <ul class="footer-links">
-          <li><a href="index.html">Accueil</a></li>
-          <li><a href="aboutme.html">Soins</a></li>
-          <li><a href="tarrif.html">Tarifs</a></li>
-          <li><a href="galeri.html">Galerie</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="footer-col-title">Contact</div>
-        <a href="tel:0698895931" class="footer-contact-item">
-          <svg width="14" height="14" fill="currentColor" viewBox="0 0 256 256"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.56l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46Z"/></svg>
-          06.98.89.59.31
-        </a>
+      <div class="footer-contact">
+        <a href="tel:0698895931">06 98 89 59 31</a>
+        <a href="https://wa.me/33698895931">WhatsApp</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">© 2025 Le bien-être au naturel. Tous droits réservés.</span>
+      <p>© 2024 Aurélie Massage — Praticienne depuis 2004</p>
     </div>
   </footer>
 
   <script>
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80); });
-    }, { threshold: 0.05 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
 
-    function openLightbox(src) {
-      document.getElementById('lightbox-img').style.backgroundImage = `url('${src}')`;
-      document.getElementById('lightbox').classList.add('open');
+    const images = Array.from(document.querySelectorAll('.gallery-item img')).map(img => img.src);
+    let current = 0;
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+
+    function openLb(index) {
+      current = index;
+      lbImg.src = images[current];
+      lb.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
-
-    function closeLightbox() {
-      document.getElementById('lightbox').classList.remove('open');
+    function closeLb() {
+      lb.classList.remove('active');
       document.body.style.overflow = '';
     }
+    function prev() { current = (current - 1 + images.length) % images.length; lbImg.src = images[current]; }
+    function next() { current = (current + 1) % images.length; lbImg.src = images[current]; }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+    document.querySelectorAll('.gallery-item').forEach((item, i) => item.addEventListener('click', () => openLb(i)));
+    document.getElementById('lbClose').addEventListener('click', closeLb);
+    document.getElementById('lbPrev').addEventListener('click', prev);
+    document.getElementById('lbNext').addEventListener('click', next);
+    lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLb();
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    });
   </script>
 </body>
 </html>
